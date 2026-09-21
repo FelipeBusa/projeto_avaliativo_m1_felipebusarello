@@ -1,0 +1,8 @@
+# Arquivos grandes de dados
+data/*.csv
+
+# Arquivo compactado original
+Arquivos base/*.zip
+
+/PostgreSQL
+.env
