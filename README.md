@@ -48,12 +48,33 @@ será criado
 # 📁 Estrutura do Projeto
 
 ```text
+
 projeto_avaliativo_m1_felipebusarello/
 │
-├── 📂 dataset/
+├── Arquivos base/
+│   │
+│   ├── _MySQL-20260918T230747Z-1-001.zip
+│   ├── _PostgreSQL-20260918T230746Z-1-001.zip
+│   └── data-20260918T230746Z-1-001.zip 
 │
-├── 📓 a ser criado.ipynb
-├── 📄 README.md
+├── data/
+│   │
+│   ├── 2025_Pagamento.csv
+│   ├── 2025_Passagem.csv
+│   ├── 2025_Trecho.csv
+│   └── 2025_Viagem.csv
+│
+├── PostgreSQL/
+│   │
+│   ├── banco.py
+│   ├── config.py
+│   ├── .env.example
+│   └── __pycache__/
+│   └──└── config.cpython-313.pyc
+│
+├── .env
+├── .gitignore
+└── README.md
 ```
 
 

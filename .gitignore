@@ -1,8 +1,15 @@
-# Arquivos grandes de dados
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Dados grandes
 data/*.csv
 
 # Arquivo compactado original
 Arquivos base/*.zip
 
-/PostgreSQL
+# Configurações locais
+PostgreSQL/config.py
+
+
 .env
