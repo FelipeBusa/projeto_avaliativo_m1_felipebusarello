@@ -1,8 +1,9 @@
 -- PROJETO AVALIATIVO - MÓDULO 1
--- Arquivo Criado: 0_criar_banco.sql
+-- Arquivo: 0_criar_banco.sql
 -- Banco de Dados: transparencia
 
-/* Fase 0 - Banco e tabelas (0_criar_banco.sql): 
+/* 
+Fase 0 - Banco e tabelas (0_criar_banco.sql): 
 Criar o database e as 8 tabelas. 
 As 4 tabelas Raw têm todas as colunas VARCHAR e sem constraints; 
 As 4 tabelas Silver são tipadas e têm PRIMARY KEY, FOREIGN KEY e 
@@ -170,7 +171,9 @@ CREATE TABLE silver_trecho (
     numero_diarias DECIMAL(10,2) CHECK (numero_diarias >= 0),
     CONSTRAINT fk_trecho_viagem
         FOREIGN KEY (id_viagem)
-        REFERENCES silver_viagem(id_viagem)
+        REFERENCES silver_viagem(id_viagem),
+    CONSTRAINT uq_trecho_viagem_sequencia
+        UNIQUE (id_viagem, sequencia_trecho)
 );
 
 
