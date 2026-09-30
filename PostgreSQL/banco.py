@@ -5,7 +5,6 @@ banco.py
 
 import psycopg2
 from psycopg2 import Error
-
 from PostgreSQL.config import POSTGRES_CONFIG
 
 
@@ -16,7 +15,10 @@ def conectar():
     """
     try:
         return psycopg2.connect(**POSTGRES_CONFIG)
-    except Error as erro:
+    except (Error, UnicodeDecodeError) as erro:
+        # Num PostgreSQL instaldo em português, a mensagem de erro do servidor tem
+        # acento ("autenticação", "não existe") e o psycopg2 falha ao lê-la com um
+        # UnicodeDecodeError. Por isso capturamos os dois tipos de erro aqui
         raise RuntimeError(
             f"Nao foi possivel conectar ao PostgreSQL em "
             f"{POSTGRES_CONFIG['host']}:{POSTGRES_CONFIG['port']} / database "
