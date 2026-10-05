@@ -1,35 +1,37 @@
--- ==========================================================
+-- ============================================================
 -- PROJETO AVALIATIVO - MÓDULO 1
 -- Arquivo: 0_criar_banco.sql
 -- Banco de Dados: transparencia
+-- ============================================================
 
--- OBJETIVO:
-	-- Criar o database e as 8 tabelas. 
-	-- As 4 tabelas Raw têm todas as colunas VARCHAR e sem constraints; 
-	-- As 4 tabelas Silver são tipadas e têm PRIMARY KEY, FOREIGN KEY e 
-	-- Mais 2 constraints por tabela (NOT NULL, CHECK e UNIQUE), declaradas dentro do CREATE TABLE.
+/*
+Criação do banco de dados e das tabelas Raw e Silver.
 
--- ATENÇÃO:
-	-- O comando CREATE DATABASE cria o banco, mas não muda a conexão atual para ele.
+ATENÇÃO:
+O banco de dados deve ser criado primeiro.
+Após a criação, é necessário conectar-se ao banco "transparencia" para executar as demais etapas.
 
--- Portanto:
-	-- 1. Execute a ETAPA 1 para criar o banco.
-	-- 2. Conecte-se ao banco "transparencia".
-	-- 3. Execute as ETAPAS 2 em diante.
--- ==========================================================
+O que este script faz:
+  1. Cria o banco de dados.
+  2. Remove tabelas e objetos existentes.
+  3. Cria as tabelas Raw.
+  4. Cria as tabelas Silver.
+  5. Define PK, FK e constraints das tabelas Silver.
+  6. Executa consultas para validação da estrutura.
+*/
 
 
--- ===============
--- ETAPA 1 - CRIAÇÃO DO BANCO DE DADOS
--- ===============
+-- ============================================================
+-- 1. CRIAÇÃO DO BANCO DE DADOS
+-- ============================================================
 CREATE DATABASE transparencia;
 
 
--- ===============
--- ETAPA 2 - LIMPEZA DADOS EXISTENTES
--- ===============
--- Execute esta etapa já conectado ao banco "transparencia".
--- Serão apagados todas as tabelas/informações das estapas silver e gols, se existir.
+-- ============================================================
+-- 2. LIMPEZA DOS OBJETOS EXISTENTES
+-- ============================================================
+/* Execute esta etapa já conectado ao banco "transparencia".
+Serão apagados todas as tabelas/informações das estapas silver e gols, se existir. */
 DROP VIEW IF EXISTS vw_gold_pagamento_resumo;
 DROP VIEW IF EXISTS vw_gold_trecho_resumo;
 
@@ -47,9 +49,9 @@ DROP TABLE IF EXISTS raw_trecho;
 DROP TABLE IF EXISTS raw_viagem;
 
 
--- ===============
--- ETAPA 3 - CRIAÇÃO DAS 4 TABELAS RAW
--- ===============
+-- ============================================================
+-- 3. CRIAÇÃO DAS TABELAS RAW
+-- ============================================================
 CREATE TABLE raw_viagem (
     id_viagem              VARCHAR(255),
     num_proposta           VARCHAR(255),
@@ -128,10 +130,9 @@ CREATE TABLE raw_trecho (
 );
 
 
-
--- ===============
--- ETAPA 4 - CRIAÇÃO DAS 4 TABELAS SILVER
--- ===============
+-- ============================================================
+-- 4. CRIAÇÃO DAS TABELAS SILVER
+-- ============================================================
 CREATE TABLE silver_viagem (
     id_viagem            VARCHAR(20)  NOT NULL,
     num_proposta         VARCHAR(20),
@@ -218,19 +219,18 @@ CREATE TABLE silver_trecho (
 );
 
 
-
--- ===============
--- ETAPA 5 - VALIDAÇÃO DA CRIAÇÃO DAS TABELAS RAW E SILVER
--- ===============
+-- ============================================================
+-- 5. VALIDAÇÃO DAS TABELAS
+-- ============================================================
 SELECT table_name
 FROM information_schema.tables
 WHERE table_schema = 'public'
 ORDER BY table_name;
 
 
--- ===============
--- ETAPA 6 - VALIDAÇÃO DAS ESTRUTURAS DAS COLUNAS
--- ===============
+-- ============================================================
+-- 6. VALIDAÇÃO DAS COLUNAS
+-- ============================================================
 SELECT
     table_name,
     ordinal_position,
@@ -253,9 +253,9 @@ ORDER BY
     ordinal_position;
 
 
--- ===============
--- ETAPA 7 - VALIDAÇÃO DAS CONSTRAINTS
--- ===============
+-- ============================================================
+-- 7. VALIDAÇÃO DAS CONSTRAINTS
+-- ============================================================
 SELECT
     tc.table_name,
     tc.constraint_name,
@@ -279,9 +279,9 @@ ORDER BY
     tc.constraint_name;
 	
 
--- ===============
--- ETAPA 8 - VALIDAÇÃO DOS RELACIONAMENTOS
--- ===============
+-- ============================================================
+-- 8. VALIDAÇÃO DOS RELACIONAMENTOS
+-- ============================================================
 SELECT
     tc.table_name AS tabela,
     kcu.column_name AS coluna,
