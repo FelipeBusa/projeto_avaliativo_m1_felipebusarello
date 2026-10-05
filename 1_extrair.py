@@ -1,6 +1,26 @@
+# ============================================================
 # PROJETO AVALIATIVO - MÓDULO 1
 # Arquivo: 1_extrair.py
+# ============================================================
 
+
+"""
+Extração dos dados: Arquivos CSV para Tabelas Raw
+
+ATENÇÃO:
+Antes de executar este arquivo, deve ser executado o arquivo: 0_criar_banco.sql
+
+O que este script faz:
+  1. Baixa os arquivos de dados.
+  2. Extrai os arquivos CSV.
+  3. Lê os arquivos CSV.
+  4. Grava os dados nas tabelas Raw.
+  5. Pode ser executado várias vezes, pois as tabelas Raw são limpas antes de uma nova carga.
+"""
+
+# ============================================================
+# 1. IMPORTAÇÃO DAS BIBLIOTECAS
+# ============================================================
 import io
 import zipfile
 import pandas as pd
@@ -16,7 +36,10 @@ from PostgreSQL.config import (
     TAMANHO_BLOCO,
 )
 
-# CONFIGURAÇÃO DO DOWNLOAD
+
+# ============================================================
+# 2. CONFIGURAÇÃO DO DOWNLOAD
+# ============================================================
 if not DRIVE_FILE_ID:
     raise RuntimeError(
         "Cole o ID do arquivo do Drive na variável "
@@ -27,7 +50,10 @@ URL_DOWNLOAD = (
     f"https://drive.google.com/uc?export=download&id={DRIVE_FILE_ID}"
 )
 
-# DOWNLOAD E VALIDAÇÃO DO ZIP
+
+# ============================================================
+# 3. DOWNLOAD E VALIDAÇÃO DO ARQUIVO
+# ============================================================
 def baixar_arquivo(url):
     """Baixa o arquivo ZIP do Google Drive."""
 
@@ -81,7 +107,10 @@ def verificar_conteudo_zip(arquivo_zip):
             "está compartilhado como 'Qualquer pessoa com o link'."
         ) from erro
 
-# COMANDOS DE INSERT
+
+# ============================================================
+# 4. COMANDOS DE INSERT
+# ============================================================
 sql_insert_viagem = """
     INSERT INTO raw_viagem (id_viagem,num_proposta,situacao,viagem_urgente,justificativa_urgencia,cod_orgao_superior,
         nome_orgao_superior,cod_orgao_solicitante,nome_orgao_solicitante,cpf_viajante,nome_viajante,
@@ -118,7 +147,10 @@ COMANDOS_INSERT = {
     "2025_Trecho.csv": sql_insert_trecho,
 }
 
-# CARGA RAW
+
+# ============================================================
+# 5. LIMPEZA DAS TABELAS RAW
+# ============================================================
 def limpar_tabelas_raw(conexao):
     """Remove os dados existentes das tabelas Raw."""
 
@@ -131,6 +163,10 @@ def limpar_tabelas_raw(conexao):
     finally:
         cursor.close()
 
+
+# ============================================================
+# 6. LEITURA E CARGA DOS DADOS
+# ============================================================
 def carregar_dados(conexao, arquivo_zip):
     """Lê os CSVs em blocos e carrega as tabelas Raw."""
 
@@ -187,7 +223,10 @@ def carregar_dados(conexao, arquivo_zip):
     finally:
         cursor.close()
 
-# VALIDAÇÃO
+
+# ============================================================
+# 7. VALIDAÇÃO DA CARGA
+# ============================================================
 def validar_quantidade(
     arquivo_csv,
     tabela_raw,
@@ -240,7 +279,10 @@ def validar_cargas(conexao, quantidades_lidas):
     finally:
         cursor.close()
 
-# EXECUÇÃO PRINCIPAL
+
+# ============================================================
+# 8. EXECUÇÃO PRINCIPAL
+# ============================================================
 def main():
     """Executa o processo completo de extração e carga Raw."""
 
