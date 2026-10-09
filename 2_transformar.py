@@ -36,15 +36,7 @@ from PostgreSQL.config import TAMANHO_BLOCO
 # 2. FUNÇÕES DE LIMPEZA E CONVERSÃO
 # ============================================================
 def limpar_texto(texto):
-    """
-    Remove espaços no início e no final do texto.
-    Valores vazios são convertidos para None.
-    Valores especiais da fonte serão preservados, como:
-        - Sem informação
-        - Sigiloso
-        - Informações protegidas por sigilo
-        - Inválido
-    """
+    """ Remove espaços extras e converte texto vazio em None """
 
     if texto is None:
         return None
@@ -58,7 +50,7 @@ def limpar_texto(texto):
 
 
 def converter_data(data):
-    """ Converte uma data no formato DD/MM/AAAA para date. """
+    """ Converte uma data  DD/MM/AAAA para date. """
 
     if data is None:
         return None
@@ -78,7 +70,7 @@ def converter_data(data):
 
 
 def converter_decimal(valor):
-    """ Converte valores numéricos com vírgula decimal para Decimal. """
+    """ Converte valores com vírgula decimal para número. """
 
     if valor is None:
         return None
@@ -112,17 +104,15 @@ def converter_inteiro(valor):
 
 
 # ============================================================
-# 3.1. TRANSFORMAÇÃO DOS DADOS - Tabela Viagem
+# 3.1. TRANSFORMAÇÃO DOS DADOS
 # ============================================================
 def transformar_viagem(conexao):
-    """ Lê a tabela 'raw_viagem', realiza a limpeza e calcula os campos derivados. """
+    """ Limpa os dados da raw_viagem e calcula campos derivados """
 
-# --------------------------------------------------------
 # Leitura da tabela Raw
     df = pd.read_sql("SELECT * FROM raw_viagem",conexao)
     print(f"raw_viagem: {len(df):,} registros lidos.")
 
-# --------------------------------------------------------
 # Limpeza dos campos de texto
     colunas_texto = [
         "id_viagem", "num_proposta", "situacao", "viagem_urgente", "cod_orgao_superior",
@@ -132,19 +122,16 @@ def transformar_viagem(conexao):
     for coluna in colunas_texto:
         df[coluna] = df[coluna].apply(limpar_texto)
 
-# --------------------------------------------------------
 # Conversão das datas
     df["data_inicio"] = df["data_inicio"].apply(converter_data)
     df["data_fim"] = df["data_fim"].apply(converter_data)
 
-# --------------------------------------------------------
 #  Conversão dos valores financeiros
     colunas_valores = ["valor_diarias", "valor_passagens", "valor_devolucao","valor_outros_gastos",]
 
     for coluna in colunas_valores:
         df[coluna] = df[coluna].apply(converter_decimal)
 
-# --------------------------------------------------------
 # Cálculo do valor total
     df["valor_total"] = (
         df["valor_diarias"].fillna(0)
@@ -154,7 +141,6 @@ def transformar_viagem(conexao):
     ).round(2)
 
 
-# --------------------------------------------------------
 # Cálculo da duração da viagem
     df["duracao_dias"] = (
         pd.to_datetime(df["data_fim"])
@@ -165,40 +151,60 @@ def transformar_viagem(conexao):
     return df
 
 # ============================================================
-# 3.2. PREPARAÇÃO CARGA DOS DADOS - Tabela Viagem
+# 3.2. PREPARAÇÃO CARGA DOS DADOS
 # ============================================================
-def preparar_viagem(df):
-    """ Seleciona as colunas da 'silver_viagem' e organiza os dados na mesma ordem da tabela PostgreSQL."""
-
-    colunas_silver = ["id_viagem", "num_proposta", "situacao", "viagem_urgente", "cod_orgao_superior",
-        "nome_orgao_superior", "nome_viajante", "cargo", "data_inicio", "data_fim", "destinos",
-        "motivo", "valor_diarias", "valor_passagens", "valor_devolucao", "valor_outros_gastos", "valor_total",
-        "duracao_dias",]
-
-    df = df[colunas_silver].copy()
-    return df
+def preparar_tabela(df, colunas):
+    """ Seleciona e organiza as colunas para a carga no PostgreSQL."""
+    return df[colunas].copy()
 
 
 # ============================================================
-# 3.3 CARGA DOS DADOS - Tabela Silver 
+# 3.3. LIMPEZA DAS TABELAS SILVER 
 # ============================================================
-def carregar_viagem(conexao, df):
-    """ Carrega os dados preparados na tabela 'silver_viagem'."""
+def limpar_tabelas_silver(conexao): 
+    """Limpa as tabelas Silver antes de uma nova carga completa.""" 
+    
+    executar( 
+             conexao, 
+             """ 
+             TRUNCATE TABLE 
+                silver_pagamento, 
+                silver_passagem, 
+                silver_trecho, 
+                silver_viagem 
+            """, 
+        ) 
+    
+    print("Tabelas Silver limpas para nova carga.")
 
-# --------------------------------------------------------
-# Limpa a tabela antes da nova carga
-    executar( conexao, """ TRUNCATE TABLE silver_pagamento, silver_passagem, silver_trecho, silver_viagem """ )
 
-# --------------------------------------------------------
-# Inserção dos dados
-    sql_insert = """
-        INSERT INTO silver_viagem (id_viagem, num_proposta, situacao, viagem_urgente, cod_orgao_superior,
-            nome_orgao_superior, nome_viajante, cargo, data_inicio, data_fim, destinos, motivo,
-            valor_diarias, valor_passagens, valor_devolucao, valor_outros_gastos, valor_total, duracao_dias)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+# ============================================================
+# 3.4 CARGA DOS DADOS 
+# ============================================================
+def carregar_tabela(conexao, tabela, df):
+    """ Carrega os dados preparados na tabela 'silver'."""
+
+# Tabelas permitidas para a carga
+    tabelas_permitidas = [
+        "silver_viagem",
+        "silver_pagamento",
+        "silver_passagem",
+        "silver_trecho",
+    ]
+
+    if tabela not in tabelas_permitidas:
+        raise ValueError(f"Tabela não permitida: {tabela}")
+
+# Organiza os nomes das colunas e os parâmetros SQL
+    colunas = list(df.columns)
+    nomes_colunas = ", ".join(colunas)
+    parametros = ", ".join(["%s"] * len(colunas))
+
+    sql_insert = f"""
+        INSERT INTO {tabela} ({nomes_colunas})
+        VALUES ({parametros})
     """
-
-# --------------------------------------------------------
+    
 # Converte o DataFrame em lista de tuplas
     linhas = [
         tuple(
@@ -208,8 +214,49 @@ def carregar_viagem(conexao, df):
         for linha in df.itertuples(index=False,name=None)
     ]
 
-# --------------------------------------------------------
 # Insere os dados em lote
     inserir_em_lote(conexao,sql_insert,linhas)
-    print(f"silver_viagem: {len(linhas):,} registros carregados.")
+    print(f"{tabela}: {len(linhas):,} registros carregados.")
 
+
+# ============================================================ 
+# 4. EXECUÇÃO PRINCIPAL 
+# ============================================================ 
+def main(): 
+    """Executa a transformação e a carga da silver_viagem.""" 
+    conexao = conectar() 
+    try: 
+        # Transformação 
+        df_viagem = transformar_viagem(conexao) 
+        
+        # Preparação 
+        colunas_viagem = [ 
+            "id_viagem", "num_proposta", "situacao", "viagem_urgente", "cod_orgao_superior", 
+            "nome_orgao_superior", "nome_viajante", "cargo", "data_inicio", "data_fim", 
+            "destinos", "motivo", "valor_diarias", "valor_passagens", "valor_devolucao", 
+            "valor_outros_gastos", "valor_total", "duracao_dias", 
+            ] 
+        
+        df_viagem = preparar_tabela(df_viagem, colunas_viagem) 
+        
+        # Limpeza das tabelas antes da carga completa
+        limpar_tabelas_silver(conexao)
+
+        # Carga da tabela Viagem
+        carregar_tabela(conexao, "silver_viagem", df_viagem)
+        
+        # Confirma as alterações no banco 
+        conexao.commit() 
+        
+        print("Carga da silver_viagem concluída com sucesso.") 
+    
+    except Exception as erro: 
+        conexao.rollback() 
+        print(f"Erro no processo: {erro}") 
+        raise 
+    
+    finally: 
+        conexao.close() 
+
+if __name__ == "__main__": 
+    main()
