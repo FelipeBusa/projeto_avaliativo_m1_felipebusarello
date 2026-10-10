@@ -13,3 +13,4 @@ PostgreSQL/config.py
 
 
 .env
+analise_raw.ipynb
