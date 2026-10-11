@@ -188,14 +188,6 @@ def transformar_pagamento(conexao):
     df = pd.read_sql("SELECT * FROM raw_pagamento", conexao)
     print(f"raw_pagamento: {len(df):,} registros lidos.")
 
-    total_inicial = len(df)
-    df = df.drop_duplicates().copy()
-
-    print(
-        "Duplicatas exatas removidas de raw_pagamento: "
-        f"{total_inicial - len(df):,}"
-    )
-
     colunas_texto = ["id_viagem", "num_proposta", "nome_orgao_pagador", "nome_ug_pagadora",
         "tipo_pagamento",]
 

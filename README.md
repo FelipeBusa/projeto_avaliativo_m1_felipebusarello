@@ -153,7 +153,15 @@ Entre os tratamentos previstos estão:
 
 A camada Silver será composta por tabelas estruturadas e tipadas, com **chaves primárias, chaves estrangeiras e constraints** para garantir maior consistência dos dados.
 
-As regras definitivas de transformação e os resultados da carga serão documentados após a execução desta etapa.
+### Preservação de registros na tabela de pagamentos
+
+Na transformação da tabela `raw_pagamento` para `silver_pagamento`, não é realizada a remoção automática de duplicatas exatas.
+
+Essa decisão considera que a origem não possui um identificador próprio de pagamento que permita distinguir com segurança registros repetidos de lançamentos legítimos com os mesmos atributos. Portanto, a igualdade entre todas as colunas não é considerada, isoladamente, evidência suficiente de erro nos dados.
+
+Os registros de pagamentos são mantidos independentemente da situação da viagem. A transformação realiza os tratamentos de texto, a conversão dos valores numéricos e as validações de integridade previstas no processo.
+
+O filtro de situação da viagem é aplicado posteriormente nas consultas analíticas que exigem exclusivamente viagens realizadas. Dessa forma, a camada Silver preserva os pagamentos de todas as situações, enquanto a camada de análise aplica os critérios específicos de cada pergunta.
 
 
 ## 3. Análise e Camada Gold
