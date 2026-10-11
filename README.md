@@ -177,9 +177,16 @@ As análises serão desenvolvidas utilizando SQL e Python.
 
 
 # 📊 Visualizações
-As visualizações serão desenvolvidas após a preparação da camada Gold.
- 
-Os gráficos serão utilizados para facilitar a interpretação dos dados e apoiar a apresentação dos resultados das análises.
+
+Os gráficos são desenvolvidos em Python com a biblioteca Matplotlib e salvos na pasta `Graficos/`.
+
+Até o momento, foram produzidas três visualizações:
+
+- **Pergunta 1:** comparação do custo total dos cinco órgãos com maiores valores registrados.
+- **Pergunta 2:** comparação do custo médio por viagem entre as três combinações de destinos selecionadas.
+- **Pergunta 3:** comparação da duração das duas viagens mais longas com a média de duração das demais viagens realizadas.
+
+As imagens são salvas em formato PNG e utilizadas para apoiar a interpretação dos resultados.
 
 
 # 💡 Principais Insights
@@ -243,6 +250,11 @@ projeto_avaliativo_m1_felipebusarello/
 │   ├── 2025_Trecho.csv
 │   └── 2025_Viagem.csv
 │
+├── Graficos/
+│   ├── pergunta_1_custo_total_por_orgao.png
+│   ├── pergunta_2_custo_medio_por_destino.png
+│   └── pergunta_3_duracao_viagens.png
+│
 ├── PostgreSQL/
 │   ├── banco.py
 │   ├── .env.example
@@ -251,6 +263,7 @@ projeto_avaliativo_m1_felipebusarello/
 ├── 0_criar_banco.sql
 ├── 1_extrair.py
 ├── 2_transformar.py
+├── 3_analise.ipynb
 ├── README.md
 └── .gitignore
 ```
