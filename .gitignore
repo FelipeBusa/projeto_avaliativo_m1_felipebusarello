@@ -8,9 +8,8 @@ data/*.csv
 # Arquivo compactado original
 Arquivos base/*.zip
 
-# Configurações locais
-PostgreSQL/config.py
-
-
+# Credenciais locais
 .env
+
+# Notebook de análise exploratória local
 analise_raw.ipynb
