@@ -5,15 +5,31 @@
 -- ============================================================
 
 /*
-Criação do banco de dados e das tabelas Raw e Silver.
+OBJETIVO:
+Criar a estrutura do banco de dados de transparência de viagens,
+com tabelas Raw e Silver e consultas de validação.
+
+INSTRUÇÕES DE EXECUÇÃO NO pgAdmin:
+
+ETAPA 1 - CRIAÇÃO DO BANCO
+1. Conecte-se ao banco administrativo "postgres".
+2. Execute somente o comando CREATE DATABASE da seção 1.
+3. Se o banco "transparencia" já existir, não execute esse comando
+   novamente.
+
+ETAPA 2 - CRIAÇÃO DAS TABELAS
+1. No pgAdmin, conecte-se ao banco "transparencia".
+2. Execute as seções 2 a 8 deste arquivo.
 
 ATENÇÃO:
-O banco de dados deve ser criado primeiro.
-Após a criação, é necessário conectar-se ao banco "transparencia" para executar as demais etapas.
+A seção 2 contém comandos DROP que removem tabelas e views
+existentes, incluindo os dados armazenados nelas.
+Execute essa seção somente quando quiser recriar a estrutura.
+Faça backup dos dados necessários antes de executar a limpeza.
 
 O que este script faz:
   1. Cria o banco de dados.
-  2. Remove tabelas e objetos existentes.
+  2. Permite limpar objetos existentes.
   3. Cria as tabelas Raw.
   4. Cria as tabelas Silver.
   5. Define PK, FK e constraints das tabelas Silver.
@@ -30,8 +46,11 @@ CREATE DATABASE transparencia;
 -- ============================================================
 -- 2. LIMPEZA DOS OBJETOS EXISTENTES
 -- ============================================================
-/* Execute esta etapa já conectado ao banco "transparencia".
-Serão apagados todas as tabelas/informações das estapas silver e gols, se existir. */
+/*
+ATENÇÃO: execute esta seção somente se desejar remover as tabelas
+e views existentes no banco "transparencia".
+Os comandos DROP apagam os dados armazenados nesses objetos.
+*/
 DROP VIEW IF EXISTS vw_gold_pagamento_resumo;
 DROP VIEW IF EXISTS vw_gold_trecho_resumo;
 
