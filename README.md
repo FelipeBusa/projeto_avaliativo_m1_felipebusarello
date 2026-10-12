@@ -170,7 +170,9 @@ As análises consideram apenas viagens com situação **`Realizada`**, conforme 
 
 ## 📈 Perguntas de negócio e análises realizadas
 
-As sete perguntas obrigatórias foram concluídas no notebook `3_analise.ipynb`, com consultas SQL, tabelas de resultados, gráficos e conclusões analíticas.
+As sete perguntas obrigatórias foram concluídas no notebook `3_analise.ipynb`. Além delas, foram desenvolvidas três análises complementares para aprofundar a interpretação dos dados.
+
+Todas as análises estão documentadas no notebook, com consultas SQL, tabelas de resultados, visualizações e conclusões, conforme aplicável.
 
 | Pergunta | Análise realizada | Visualização |
 |---|---|---|
@@ -182,52 +184,58 @@ As sete perguntas obrigatórias foram concluídas no notebook `3_analise.ipynb`,
 | **6** | Quantidade de trechos por destino, identificando as UFs com maior ocorrência | `pergunta_6_quantidade_por_uf_destino.png` |
 | **7** | Dez órgãos com maior custo total de pagamentos | `pergunta_7_custo_total_por_orgao.png` |
 
+### Análises Complementares
+| Pergunta | Análise realizada | Visualização |
+|---|---|---|
+| **8** | Viajantes com maiores custos totais, com detalhamento dos dois primeiros e dos cinco seguintes no ranking | `pergunta_8.1_top_2_viajantes_maior_custo.png` e `pergunta_8.2_top_5_viajantes_maior_custo.png` |
+| **9** | Evolução mensal do custo total das viagens realizadas, considerando a data de início | `pergunta_9_evolucao_mensal_custo_total.png` |
+| **10** | Composição dos gastos por tipo de pagamento, considerando quantidade de viagens relacionadas, valor total e participação financeira | `pergunta_10_composicao_gastos_tipo_pagamento.png` |
+
 ### 📊 Visualizações
 
-Os gráficos foram desenvolvidos em Python com Matplotlib e salvos no diretório `Graficos/`.
+Os gráficos foram desenvolvidos em Python com Matplotlib e salvos no diretório `Graficos/`. Eles complementam as tabelas de resultados e facilitam a identificação de padrões, diferenças e tendências.
 
 #### Pergunta 1 - Custo total por órgão
-
 Compara os cinco órgãos com maior custo total de viagens.
-
 ![Custo total por órgão](Graficos/pergunta_1_custo_total_por_orgao.png)
 
 #### Pergunta 2 - Custo médio por destino
-
 Compara o custo médio por viagem entre as três combinações de destinos selecionadas.
-
 ![Custo médio por destino](Graficos/pergunta_2_custo_medio_por_destino.png)
 
 #### Pergunta 3 - Duração das viagens
-
 Compara as duas viagens de maior duração com a média de duração das demais viagens realizadas.
-
 ![Duração das viagens](Graficos/pergunta_3_duracao_viagens.png)
 
 #### Pergunta 4 - Valor médio por tipo de pagamento
-
-Destaca o tipo de pagamento com maior valor médio. A análise também contempla a quantidade de pagamentos e a participação no valor financeiro total.
-
+A análise compara os tipos de pagamento considerando quantidade de registros, valor total e valor médio.
 ![Valor médio por tipo de pagamento](Graficos/pergunta_4.1_valor_medio_por_tipo_pagamento.png)
 ![Distribuição por tipo de pagamento](Graficos/pergunta_4.2_participacao_por_tipo_pagamento.png)
 
 #### Pergunta 5 - Quantidade por meio de transporte
-
 Apresenta a quantidade de trechos associados a cada meio de transporte.
-
 ![Quantidade por meio de transporte](Graficos/pergunta_5_quantidade_por_meio_transporte.png)
 
 #### Pergunta 6 - Quantidade por UF de destino
-
 Apresenta os destinos com maior quantidade de trechos registrados.
-
 ![Quantidade por UF de destino](Graficos/pergunta_6_quantidade_por_uf_destino.png)
 
 #### Pergunta 7 - Custo total por órgão
-
 Apresenta os dez órgãos com maior valor total de pagamentos, destacando o primeiro colocado.
-
 ![Custo total por órgão](Graficos/pergunta_7_custo_total_por_orgao.png)
+
+### Pergunta 8 - Maiores custos por viajante
+Identifica os viajantes com maiores custos totais, considerando a quantidade de viagens e os valores acumulados. Os gráficos apresentam os dois primeiros colocados e os cinco seguintes no ranking.
+![Custo por viajante1](Graficos/pergunta_8.1_top_2_viajantes_maior_custo.png)
+![Custo por viajante2](Graficos/pergunta_8.2_top_5_viajantes_maior_custo.png)
+
+### Pergunta 9 - Evolução mensal do custo total
+Apresenta a evolução mensal dos custos das viagens realizadas entre janeiro e junho de 2025, com uma linha de referência para a média mensal do período.
+![Evolução Mensal](Graficos/pergunta_9_evolucao_mensal_custo_total.png)
+
+### Pergunta 10 - Composição dos gastos por tipo de pagamento
+Compara a participação financeira dos tipos de pagamento. Os resultados evidenciam a concentração dos valores em diárias e passagens.
+![Composião Gastos](Graficos/pergunta_10_composicao_gastos_tipo_pagamento.png)
 
 ### 📝 Observações metodológicas
 
@@ -236,6 +244,9 @@ Apresenta os dez órgãos com maior valor total de pagamentos, destacando o prim
 - **Pergunta 4:** o valor médio é calculado por registro de pagamento. A análise também compara quantidade de pagamentos e valor financeiro total.
 - **Perguntas 5 e 6:** as contagens consideram os trechos associados às viagens realizadas. Categorias presentes nos dados, como `Inválido`, são mantidas quando não são excluídas explicitamente pelas consultas.
 - **Pergunta 7:** o ranking utiliza o valor total dos pagamentos associados a cada órgão nas viagens realizadas. O gráfico apresenta os dez primeiros colocados.
+- **Pergunta 8:** os rankings consideram os custos totais agregados por viajante. Categorias como `Informações protegidas por sigilo` e `Sem Informação` podem aparecer nos resultados porque são valores presentes na fonte.
+- **Pergunta 9:** a evolução mensal é calculada com base na data de início das viagens realizadas. A média de referência considera os seis meses analisados, de janeiro a junho de 2025.
+- **Pergunta 10:** a composição dos gastos utiliza os registros de `silver_pagamento` com valor não nulo. Essa consulta não aplica explicitamente o filtro de situação Realizada; portanto, seus resultados não devem ser interpretados como exclusivos das viagens realizadas. A participação percentual é calculada sobre o valor total dos pagamentos incluídos na análise.
 
 ## 💡 Principais aprendizados
 
@@ -315,7 +326,12 @@ projeto_avaliativo_m1_felipebusarello/
 │   ├── pergunta_4_valor_medio_por_tipo_pagamento.png
 │   ├── pergunta_5_quantidade_por_meio_transporte.png
 │   ├── pergunta_6_quantidade_por_uf_destino.png
-│   └── pergunta_7_custo_total_por_orgao.png
+│   ├── pergunta_7_custo_total_por_orgao.png
+│   ├── pergunta_7_custo_total_por_orgao.png
+│   ├── pergunta_8.1_top_2_viajantes_maior_custo.png
+│   ├── pergunta_8.2_top_5_viajantes_maior_custo.png
+│   ├── pergunta_9_evolucao_mensal_custo_total.png
+│   └── pergunta_10_composicao_gastos_tipo_pagamento.png
 │
 ├── PostgreSQL/
 │   ├── banco.py
