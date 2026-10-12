@@ -1,4 +1,7 @@
+
 pandas
 requests
 psycopg2-binary
 beautifulsoup4
+matplotlib
+jupyter
