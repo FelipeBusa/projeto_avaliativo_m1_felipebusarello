@@ -179,7 +179,7 @@ Todas as análises estão documentadas no notebook, com consultas SQL, tabelas d
 | **1** | Cinco órgãos com maior custo total de viagens | `pergunta_1_custo_total_por_orgao.png` |
 | **2** | Três combinações de destinos com maior custo médio por viagem, considerando grupos com mais de 100 viagens realizadas | `pergunta_2_custo_medio_por_destino.png` |
 | **3** | Duas viagens de maior duração, comparadas à duração média das demais viagens realizadas | `pergunta_3_duracao_viagens.png` |
-| **4** | Comparação dos tipos de pagamento por quantidade, valor total e valor médio | `pergunta_4_valor_medio_por_tipo_pagamento.png` |
+| **4** | Comparação dos tipos de pagamento por quantidade, valor total e valor médio | `pergunta_4.1_valor_medio_por_tipo_pagamento.png` e `pergunta_4.2_participacao_por_tipo_pagamento.png` |
 | **5** | Quantidade de trechos por meio de transporte, identificando os mais utilizados | `pergunta_5_quantidade_por_meio_transporte.png` |
 | **6** | Quantidade de trechos por destino, identificando as UFs com maior ocorrência | `pergunta_6_quantidade_por_uf_destino.png` |
 | **7** | Dez órgãos com maior custo total de pagamentos | `pergunta_7_custo_total_por_orgao.png` |
@@ -323,10 +323,10 @@ projeto_avaliativo_m1_felipebusarello/
 │   ├── pergunta_1_custo_total_por_orgao.png
 │   ├── pergunta_2_custo_medio_por_destino.png
 │   ├── pergunta_3_duracao_viagens.png
-│   ├── pergunta_4_valor_medio_por_tipo_pagamento.png
+│   ├── pergunta_4.1_valor_medio_por_tipo_pagamento.png
+│   ├── pergunta_4.2_participacao_por_tipo_pagamento.png
 │   ├── pergunta_5_quantidade_por_meio_transporte.png
 │   ├── pergunta_6_quantidade_por_uf_destino.png
-│   ├── pergunta_7_custo_total_por_orgao.png
 │   ├── pergunta_7_custo_total_por_orgao.png
 │   ├── pergunta_8.1_top_2_viajantes_maior_custo.png
 │   ├── pergunta_8.2_top_5_viajantes_maior_custo.png
